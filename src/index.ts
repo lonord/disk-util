@@ -1,9 +1,11 @@
 import * as cp from 'child_process'
+import * as debug from 'debug'
 import * as drivelist from 'drivelist'
 import { promisify } from 'util'
 
 const list = promisify(drivelist.list)
 const execAsync = promisify(cp.exec)
+const log = debug('disk-util')
 
 export interface DiskInfo {
 	total: number
@@ -14,6 +16,7 @@ export interface DiskInfo {
 
 export default async function getDiskUsage() {
 	const result = (await list()) as any[]
+	log('drivelist.list() -> \n%o', result)
 	const diskInfoList = result.filter((item) => item.mountpoints && item.mountpoints.length > 0)
 	const l: DiskInfo[] = []
 	for (const d of diskInfoList) {
@@ -22,6 +25,7 @@ export default async function getDiskUsage() {
 		const dev = d.device
 		const mp = d.mountpoints[0]
 		const r = await execAsync(`df ${mp.path} | sed '1d'`)
+		log(`df ${mp.path} | sed '1d' ->\n%o`, r)
 		if (r.stdout && !r.stderr) {
 			const u = r.stdout.split(' ').map((s) => s.trim()).filter((s) => !!s)
 			if (u.length > 2) {
