@@ -1,0 +1,20 @@
+{
+   "blockdevices": [
+      {"name": "sda", "mountpoint": null, "label": null,
+         "children": [
+            {"name": "sda1", "mountpoint": null, "label": "EFI"},
+            {"name": "sda2", "mountpoint": "/media/hdd", "label": "Home"},
+            {"name": "sda3", "mountpoint": "/media/timemachine", "label": "TimeMachine"}
+         ]
+      },
+      {"name": "mmcblk0", "mountpoint": null, "label": null,
+         "children": [
+            {"name": "mmcblk0p1", "mountpoint": null, "label": "RECOVERY"},
+            {"name": "mmcblk0p2", "mountpoint": null, "label": null},
+            {"name": "mmcblk0p5", "mountpoint": null, "label": "SETTINGS"},
+            {"name": "mmcblk0p6", "mountpoint": "/boot", "label": "boot"},
+            {"name": "mmcblk0p7", "mountpoint": "/", "label": "root"}
+         ]
+      }
+   ]
+}

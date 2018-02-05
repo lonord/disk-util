@@ -1,9 +1,7 @@
 import * as cp from 'child_process'
 import * as debug from 'debug'
-import * as drivelist from 'drivelist'
 import { promisify } from 'util'
 
-const list = promisify(drivelist.list)
 const execAsync = promisify(cp.exec)
 const log = debug('disk-util')
 
@@ -15,29 +13,42 @@ export interface DiskInfo {
 }
 
 export default async function getDiskUsage() {
-	const result = (await list()) as any[]
-	log('drivelist.list() -> \n%j', result)
-	const diskInfoList = result.filter((item) => item.mountpoints && item.mountpoints.length > 0)
+	const out = (await execAsync('lsblk -J -o NAME,MOUNTPOINT,LABEL')).stdout
+	const result = JSON.parse(out).blockdevices
+	log('lsblk -J -o NAME,MOUNTPOINT,LABEL -> \n%j', result)
 	const l: DiskInfo[] = []
-	for (const d of diskInfoList) {
-		const total = d.size
-		const name = d.description
-		const dev = d.device
-		const mp = d.mountpoints[0]
-		const r = await execAsync(`df ${mp.path} | sed '1d'`)
-		log(`df ${mp.path} | sed '1d' ->\n%j`, r)
+	for (const d of result) {
+		await getMountedDiskInfo(d, l)
+	}
+	return l
+}
+
+async function getMountedDiskInfo(disk: any, diskInfoList: DiskInfo[]) {
+	if (disk.mountpoint) {
+		const r = await execAsync(`df ${disk.mountpoint} | sed '1d'`)
+		log(`df ${disk.mountpoint} | sed '1d' ->\n%j`, r)
 		if (r.stdout && !r.stderr) {
 			const u = r.stdout.split(' ').map((s) => s.trim()).filter((s) => !!s)
-			if (u.length > 2) {
+			if (u.length > 3) {
 				const used = parseInt(u[2])
-				l.push({
+				const total = parseInt(u[3])
+				diskInfoList.push({
 					total,
-					name,
+					name: disk.label ? disk.label : getNameFromPath(disk.mountpoint),
 					used,
-					dev
+					dev: disk.name
 				})
 			}
 		}
 	}
-	return l
+	if (disk.children && disk.children.length > 0) {
+		for (const c of disk.children) {
+			await getMountedDiskInfo(c, diskInfoList)
+		}
+	}
+}
+
+function getNameFromPath(path: string) {
+	const l = path.split('/')
+	return l.length > 0 ? l[l.length - 1] : ''
 }
