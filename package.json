@@ -1,0 +1,28 @@
+{
+  "name": "@lonord/disk-util",
+  "version": "1.0.0",
+  "description": "Disk util",
+  "main": "lib/",
+  "types": "lib/",
+  "scripts": {
+    "build": "rimraf lib && tsc -d",
+    "prepublishOnly": "npm run build",
+    "test": "npm run build && node lib/__test__/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@lonord.name:/~/disk-util.git"
+  },
+  "keywords": [
+    "disk"
+  ],
+  "author": "Loy B. <lonord@qq.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^9.4.0",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "drivelist": "^6.0.4"
+  }
+}
