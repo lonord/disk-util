@@ -16,7 +16,7 @@ export interface DiskInfo {
 
 export default async function getDiskUsage() {
 	const result = (await list()) as any[]
-	log('drivelist.list() -> \n%o', result)
+	log('drivelist.list() -> \n%j', result)
 	const diskInfoList = result.filter((item) => item.mountpoints && item.mountpoints.length > 0)
 	const l: DiskInfo[] = []
 	for (const d of diskInfoList) {
@@ -25,7 +25,7 @@ export default async function getDiskUsage() {
 		const dev = d.device
 		const mp = d.mountpoints[0]
 		const r = await execAsync(`df ${mp.path} | sed '1d'`)
-		log(`df ${mp.path} | sed '1d' ->\n%o`, r)
+		log(`df ${mp.path} | sed '1d' ->\n%j`, r)
 		if (r.stdout && !r.stderr) {
 			const u = r.stdout.split(' ').map((s) => s.trim()).filter((s) => !!s)
 			if (u.length > 2) {
