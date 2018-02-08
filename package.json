@@ -1,11 +1,11 @@
 {
   "name": "@lonord/disk-util",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Disk util",
   "main": "lib/",
   "types": "lib/",
   "scripts": {
-    "build": "rimraf lib && tsc -d",
+    "build": "rimraf lib && tsc -d --inlineSourceMap",
     "prepublishOnly": "npm run build",
     "test": "npm run build && mocha lib/__test__/"
   },
@@ -24,6 +24,7 @@
     "@types/node": "^9.4.0",
     "fake-exec": "^1.1.0",
     "mocha": "^5.0.0",
+    "muk": "^0.5.3",
     "rimraf": "^2.6.2"
   },
   "dependencies": {
