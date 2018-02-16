@@ -1,13 +1,13 @@
 {
   "name": "@lonord/disk-util",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "Disk util",
   "main": "lib/",
   "types": "lib/",
   "scripts": {
     "build": "rimraf lib && tsc -d --inlineSourceMap",
     "prepublishOnly": "npm run build",
-    "test": "npm run build && mocha lib/__test__/"
+    "test": "npm run build && mocha --timeout 999999 lib/__test__/"
   },
   "repository": {
     "type": "git",

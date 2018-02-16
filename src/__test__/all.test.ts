@@ -76,9 +76,8 @@ describe('test', () => {
 
 	it('test-get-iostat', () => {
 		return new Promise((resolve, reject) => {
-			let watcher: IOStatWatcher
 			let t = 0
-			watchIOStat(5000, (stats) => {
+			const watcher: IOStatWatcher = watchIOStat(5000, (stats) => {
 				t++
 				assert.ok(stats)
 				assert.ok(stats.length === 14)
@@ -87,7 +86,7 @@ describe('test', () => {
 					watcher.stop()
 					resolve()
 				}
-			}).then((w) => watcher = w).catch(reject)
+			}, reject)
 		})
 	})
 

@@ -15,24 +15,35 @@ export interface IOStatWatcher {
 	stop()
 }
 
-export default async function watchIOStat(interval: number, cb: (stats: IOStat[]) => void) {
+export default function watchIOStat(interval: number, onData: (stats: IOStat[]) => void,
+	onError: (err: Error) => void) {
 	interval = interval || 3000
-	let lastStats = await getIOStat()
-	let lastTime = new Date().getTime()
-	let timer: any = setInterval(() => {
-		getIOStat().then((thisStats) => {
-			const thisTime = new Date().getTime()
-			const stats = calculateIOStat(lastStats, thisStats, thisTime - lastTime)
-			lastStats = thisStats
-			lastTime = thisTime
-			cb && cb(stats)
-		})
-	}, interval)
+	let timer: any = null
+	getIOStat().then((ls) => {
+		let lastStats = ls
+		let lastTime = new Date().getTime()
+		timer = setInterval(() => {
+			getIOStat().then((thisStats) => {
+				const thisTime = new Date().getTime()
+				const stats = calculateIOStat(lastStats, thisStats, thisTime - lastTime)
+				lastStats = thisStats
+				lastTime = thisTime
+				onData && onData(stats)
+			}).catch((err) => {
+				stop()
+				onError && onError(err)
+			})
+		}, interval)
+	}).catch((err) => {
+		stop()
+		onError && onError(err)
+	})
+	const stop = () => {
+		timer && clearInterval(timer)
+		timer = undefined
+	}
 	return {
-		stop: () => {
-			timer && clearInterval(timer)
-			timer = undefined
-		}
+		stop
 	}
 }
 
