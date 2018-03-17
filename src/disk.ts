@@ -31,7 +31,7 @@ async function getMountedDiskInfo(disk: any, diskInfoList: DiskInfo[]) {
 			const u = r.stdout.split(' ').map((s) => s.trim()).filter((s) => !!s)
 			if (u.length > 3) {
 				const used = parseInt(u[2])
-				const total = parseInt(u[3])
+				const total = parseInt(u[3]) + used
 				diskInfoList.push({
 					total,
 					name: disk.label ? disk.label : getNameFromPath(disk.mountpoint),

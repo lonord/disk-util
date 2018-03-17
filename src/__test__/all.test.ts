@@ -55,22 +55,22 @@ describe('test', () => {
 		const disk1 = result[0]
 		assert.equal(disk1.name, 'Home')
 		assert.equal(disk1.dev, 'sda2')
-		assert.equal(disk1.total, 1193011364)
+		assert.equal(disk1.total, 1230287692)
 		assert.equal(disk1.used, 37276328)
 		const disk2 = result[1]
 		assert.equal(disk2.name, 'TimeMachine')
 		assert.equal(disk2.dev, 'sda3')
-		assert.equal(disk2.total, 532961400)
+		assert.equal(disk2.total, 635110896)
 		assert.equal(disk2.used, 102149496)
 		const disk3 = result[2]
 		assert.equal(disk3.name, 'boot')
 		assert.equal(disk3.dev, 'mmcblk0p6')
-		assert.equal(disk3.total, 48081)
+		assert.equal(disk3.total, 69554)
 		assert.equal(disk3.used, 21473)
 		const disk4 = result[3]
 		assert.equal(disk4.name, 'root')
 		assert.equal(disk4.dev, 'mmcblk0p7')
-		assert.equal(disk4.total, 13022008)
+		assert.equal(disk4.total, 56624252)
 		assert.equal(disk4.used, 43602244)
 	})
 
